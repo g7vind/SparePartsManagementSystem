@@ -79,17 +79,20 @@ def  countreduce(pid,qty):
     conn.commit()
 
 def invt_view_all_data():
-    c.execute('SELECT * FROM invento(ry')
+    c.execute('SELECT * FROM inventory')
     invt_data = c.fetchall()
     return invt_data
 
-def provider():
+def create_provider():
     c.execute('''CREATE TABLE IF NOT EXISTS Providers(
-        prt_id varchar(10) primary key,
-        prt_name varchar(20) not null,
-        prt_provider_name varchar(50),
-        prt_contact number(10) not null check(length(prt_contact)=10,
-        foreign key(prt_id) references Parts(P_id)))''')
+        prt_id VARCHAR(10) PRIMARY KEY,
+        prt_name VARCHAR(20) NOT NULL,
+        prt_provider_name VARCHAR(50),
+        prt_contact INTEGER NOT NULL,
+        FOREIGN KEY(prt_id) REFERENCES Parts(P_id)
+    )''')
+    print('Provider Table created successfully')
+
 
 def order_create_table():
     c.execute('''
@@ -342,6 +345,7 @@ if __name__ == '__main__':
     cust_create_table()
     order_create_table()
     inventory_create_table()
+    create_provider()
 
     hide_streamlit_style = """ <style> #MainMenu {visibility: hidden;} footer {visibility: hidden;} </style> """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True)
