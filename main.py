@@ -78,10 +78,17 @@ def  countreduce(pid,qty):
     conn.commit()
 
 def invt_view_all_data():
-    c.execute('SELECT * FROM inventory')
+    c.execute('SELECT * FROM invento(ry')
     invt_data = c.fetchall()
     return invt_data
 
+def provider():
+    c.execute('''CREATE TABLE IF NOT EXISTS Providers(
+        prt_id varchar(10) primary key,
+        prt_name varchar(20) not null,
+        prt_provider_name varchar(50),
+        prt_contact number(10) not null check(length(prt_contact)=10,
+        foreign key(prt_id) references Parts(P_id)))''')
 
 def order_create_table():
     c.execute('''
@@ -112,11 +119,16 @@ def order_view_all_data():
     order_all_data = c.fetchall()
     return order_all_data
 
+def provider_view_all_data():
+    c.execute('SELECT * FROM Providers')
+    provider_data = c.fetchall()
+    return provider_data
+
 def admin():
 
 
     st.title("Spare Parts Database Dashboard")
-    menu = ["Parts", "Customers", "Orders","Inventory"]
+    menu = ["Parts", "Customers", "Orders","Inventory","Providers"]
     choice = st.sidebar.selectbox("Menu", menu)
 
     ## Parts
@@ -216,6 +228,19 @@ def admin():
                 if st.button(label="Update"):
                     inventory_update(pid,qty)
                     st.success("Successfully updated")
+    
+    elif choice == "Providers":
+        menu = ["View"]
+        choice = st.sidebar.selectbox("Menu", menu)
+
+        if choice == "View":
+            st.subheader("Provider Details")
+            prt_result = provider_view_all_data()
+            #st.write(cust_result)
+            with st.expander("View All Provider Data"):
+                prt_clean_df = pd.DataFrame(prt_result, columns=["Part_ID","Name","Company Name","Contact Number"])
+                st.dataframe(prt_clean_df)
+
        
 def getauthenicate(username, password):
     #print("Auth")
@@ -252,8 +277,8 @@ def customer(username, password):
 
         st.subheader("Part: "+part_result[0][0])
 
-        img = Image.open('images/dolo650.jpeg')
-        st.image(img, width=100, caption="per 15/-")
+        img = Image.open('images\Tyre.jpg')
+        st.image(img, width=200, caption="per 8000/-")
 
         if(invt_result[0][2]>0):
             part1 = st.slider(label="Quantity",min_value=0, max_value=5, key= 1)
@@ -263,8 +288,8 @@ def customer(username, password):
 
 
         st.subheader("Part: " + part_result[1][0])
-        img = Image.open('images/strepsils.jpg')
-        st.image(img, width=100 , caption="per 10/-")
+        img = Image.open('images\mirror.jpg')
+        st.image(img, width=200 , caption="per 3500/-")
         if(invt_result[1][2]>0):
             part2 = st.slider(label="Quantity",min_value=0, max_value=5, key= 2)
         else:
@@ -273,14 +298,13 @@ def customer(username, password):
        
 
         st.subheader("Part: " + part_result[2][0])
-        img = Image.open('images/vicks.jpeg')
-        st.image(img, width=100, caption="Rs.35 /-")
+        img = Image.open('images\headlight.jpg')
+        st.image(img, width=200, caption="per 12000 /-")
         if(invt_result[2][2]>0):
             part3=st.slider(label="Quantity",min_value=0, max_value=5, key=3)
         else:
             st.info("Out of stock")
          
-
 
 
         if st.button(label="Buy now"):
@@ -304,7 +328,7 @@ def customer(username, password):
             #order_add_data(O_Name, O_Items,O_Qty, O_id):
             order_add_data(username, O_items, O_Qty, O_id)
             st.success("Successfully ordered!")
-            st.text('Total amount ='+ str((int(part1)*15)+(int(part2)*10)+(int(part3)*35))+'/-')
+            st.text('Total amount ='+ str((int(part1)*8000)+(int(part2)*3500)+(int(part3)*12000))+'/-')
 
 
 
