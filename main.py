@@ -51,9 +51,10 @@ def part_create_table():
                 ''')
     print('Part Table create Successfully')
 
-def part_add_data(Pname, Pid,Pqty):
+def part_add_data(Pname, Pid,Pqty,provider_name,provider_contact):
     c.execute('''INSERT INTO Parts (P_Name, P_id) VALUES(?,?)''', (Pname,Pid))
     c.execute('''INSERT INTO inventory (i_pid, i_pname, i_Qty) VALUES(?,?,?)''', (Pid,Pname,Pqty))
+    c.execute('''Insert into providers(prt_id,prt_name,prt_provider_name,prt_contact) values(?,?,?,?)''',(Pid,Pname,provider_name,provider_contact))
     conn.commit()
 
 def part_view_all_data():
@@ -141,8 +142,10 @@ def admin():
             part_name = st.text_area("Enter the Part Name")
             part_quantity = st.text_area("Enter the quantity")
             part_id = st.text_area("Enter the Part id (example:#D1)")
+            provider_name = st.text_area("Enter the provider name")
+            provider_contact = st.text_area("Enter the provider contact")
             if st.button("Add Part"):
-                part_add_data(part_name,part_id,part_quantity)
+                part_add_data(part_name,part_id,part_quantity,provider_name,provider_contact)
                 st.success("Successfully Added Data")
 
         if choice == "View":
@@ -261,7 +264,6 @@ def getauthenicate(username, password):
 def customer(username, password):
     if getauthenicate(username, password):
         print("In Customer")
-        # st.title("Welcome to Pharmacy Store")
 
         st.subheader("Your Order Details")
         order_result = order_view_data(username)
@@ -311,14 +313,14 @@ def customer(username, password):
             O_items = ""
 
             if int(part1) > 0:
-                O_items += "Dolo-650,"
+                O_items += "Tyre,"
                 countreduce(invt_result[0][2],int(invt_result[0][2])-int(part1))
 
             if int(part2) > 0:
-                O_items += "Strepsils,"
+                O_items += "Mirror,"
                 countreduce(invt_result[1][2],int(invt_result[1][2])-int(part2))
             if int(part3) > 0:
-                O_items += "Vicks"
+                O_items += "Headlight"
                 countreduce(invt_result[2][2],int(invt_result[2][2])-int(part3))
             O_Qty = str(part1) + "," + str(part2) + "," + str(part3)
 
